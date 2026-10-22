@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An offline-ready teaching lab for Darcy flow across and along faults. Change permeability, geometry, pressure, and flow without installing software.">
+  <meta name="color-scheme" content="light">
+  <title>Faults & fluid flow · Darcy lab</title>
+  <style>
+    :root{--ink:#183c3b;--muted:#536867;--paper:#f5f5ee;--card:#fff;--edge:#dbe2dc;--green:#13776d;--blue:#2365b0;--rock:#d8b888;--rock-dark:#896037;--fault:#4b6167;--orange:#bc571d;--soft:#e8f1ec}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:4px}button{color:inherit}h1,h2,h3,p{margin:0}a{color:var(--green)}[hidden]{display:none!important}.shell{max-width:1500px;margin:auto;padding:30px 36px 24px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:25px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:9px}.eyebrow:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green)}h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,3.6vw,47px);font-weight:500;letter-spacing:-.035em;line-height:1.15;margin:8px 0}.subtitle{color:var(--muted);font-size:15px}.button{border:1px solid #9eafaa;background:transparent;border-radius:7px;padding:9px 15px;font-size:13px;font-weight:650}.button:hover{background:var(--soft)}.model-picker{display:flex;gap:8px;border-bottom:1px solid #cdd7d1;margin-bottom:22px;padding-bottom:14px}.model-button{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--edge);border-radius:8px;background:transparent;padding:11px 19px;min-width:253px}.model-button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:white}.model-button span{display:block;font-size:12px;opacity:.8}.model-button strong{font-weight:650;font-size:14px}.model-icon{width:33px;height:33px;flex-shrink:0}.workspace{display:grid;grid-template-columns:280px minmax(0,1fr);gap:23px;align-items:start}.card{background:var(--card);border:1px solid var(--edge);border-radius:10px}.controls{padding:21px}.panel-kicker{color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:750;letter-spacing:.13em}.controls h2{font-size:19px;margin:3px 0 18px}.boundary{border:0;padding:0;margin:0 0 23px}.boundary legend{font-size:12px;font-weight:650;margin-bottom:8px}.boundary-options{display:flex;gap:3px;background:var(--paper);padding:4px;border-radius:7px}.boundary label{flex:1;text-align:center;position:relative;font-size:12px;cursor:pointer}.boundary input{position:absolute;opacity:0;width:1px;height:1px}.boundary span{display:block;padding:8px 3px;border-radius:5px}.boundary input:checked+span{background:white;box-shadow:0 1px 4px #183c3b20;color:var(--green);font-weight:700}.boundary input:focus-visible+span{outline:3px solid var(--orange);outline-offset:2px}.control{margin-bottom:20px}.control-top{display:flex;align-items:center;justify-content:space-between;gap:5px}.control label{font-size:12px;font-weight:650}.number-wrap{display:flex;align-items:center;gap:5px}.number-wrap input{width:82px;border:1px solid var(--edge);border-radius:4px;padding:4px 5px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink);background:#fafbf9}.unit{font-size:11px;color:var(--muted);min-width:20px}.control input[type="range"]{width:100%;margin:11px 0 0;accent-color:var(--green);height:20px;cursor:pointer}.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.control-help{font-size:11px;color:var(--muted);margin-top:3px}.reset{width:100%;margin-top:0}.results{min-width:0;display:grid;gap:17px}.diagram-card{padding:18px 22px 12px}.card-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:7px}.card-heading h2{font-size:15px;font-weight:650}.small{font-size:11px;color:var(--muted)}#diagram{display:block;width:100%;height:auto;max-height:190px}.diagram-caption{font-size:11px;color:var(--muted);margin:2px 0 3px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--edge);border:1px solid var(--edge);border-radius:8px;overflow:hidden}.metric{background:var(--card);padding:14px 19px}.metric-label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px}.fixed-tag{color:var(--green);background:var(--soft);font-size:9px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 5px}.metric-value{font-size:clamp(22px,2.2vw,30px);font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.035em;margin-top:2px;white-space:nowrap}.metric-value span{font-size:13px;font-weight:450;letter-spacing:0;margin-left:4px}.metric-note{font-size:10px;color:var(--muted);margin-top:1px}.plots{display:grid;grid-template-columns:1fr 1fr;gap:17px}.plot-card{padding:17px 16px 13px;min-width:0}.plot-card h2{font-size:14px;font-weight:650}.plot-subtitle{font-size:11px;color:var(--muted);margin:2px 0 3px;min-height:17px}.plot{width:100%;height:auto;display:block;overflow:visible}.legend{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:10px;color:var(--muted);min-height:18px;margin:4px 0 0 11px}.legend span{display:inline-flex;align-items:center;gap:5px}.key{width:17px;height:0;border-top:2px solid var(--blue);display:inline-block}.key.rock{border-color:var(--rock-dark);border-top-style:dashed}.key.fault{border-color:var(--green);border-top-style:dotted}.key.selected{border:0;width:7px;height:7px;border-radius:50%;background:var(--orange)}.plot-note{font-size:10px;color:var(--muted);margin:5px 0 0 11px;min-height:30px}.notes{margin-top:22px;border-top:1px solid #cdd7d1;padding:15px 0 4px}.notes summary{cursor:pointer;font-size:12px;font-weight:650;width:fit-content}.notes-body{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:14px;font-size:12px;color:var(--muted);max-width:1150px}.notes-body h3{font-size:12px;color:var(--ink);margin-bottom:5px}.notes-body p+p{margin-top:8px}.equation{font-family:Georgia,serif;font-size:16px;color:var(--ink);line-height:1.8}.footer{display:flex;justify-content:space-between;gap:15px;padding-top:15px;font-size:10px;color:var(--muted)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}noscript p{padding:25px;background:#fff1db;color:#633b15}
+    .plot-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .axis-setting{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);white-space:nowrap}
+    .axis-setting select{font:inherit;color:var(--ink);background:#fafbf9;border:1px solid var(--edge);border-radius:4px;padding:3px}
+    @media(min-width:1500px){.plots .plot-card{padding:20px}.controls{padding:24px}}
+    @media(max-width:1100px){.shell{padding:24px}.workspace{grid-template-columns:250px minmax(0,1fr);gap:18px}.controls{padding:18px}.plots{grid-template-columns:1fr}.plot{max-height:340px}.metric{padding:12px}.metric-value{font-size:24px}}
+    /* Keep the complete experiment visible together on laptop-sized screens. */
+    @media screen and (min-width:1000px){
+      .shell{padding:12px 20px}
+      .masthead{gap:16px;margin-bottom:8px}
+      .masthead>div:first-child{display:flex;align-items:center;gap:16px}
+      .eyebrow{display:none}
+      h1{font-size:30px;line-height:1.1;margin:0;white-space:nowrap}
+      .subtitle{font-size:12px;max-width:365px}
+      .button{padding:6px 12px;font-size:12px}
+      .model-picker{padding-bottom:6px;margin-bottom:10px}
+      .model-button{min-width:0;padding:5px 13px;gap:8px}
+      .model-button strong{font-size:12px}
+      .model-button span{display:none}
+      .model-icon{width:26px;height:26px}
+      .workspace{grid-template-columns:245px minmax(0,1fr);gap:14px}
+      .controls{padding:14px}
+      .panel-kicker{display:none}
+      .controls h2{font-size:17px;margin:0 0 8px}
+      .boundary{margin-bottom:12px}
+      .boundary legend{margin-bottom:5px}
+      .boundary span{padding:6px 3px}
+      .control{margin-bottom:9px}
+      .number-wrap input{width:70px;padding:2px 5px;font-size:12px}
+      .control input[type="range"]{display:block;margin:4px 0 0;height:16px}
+      .control-help{display:none}
+      .results{grid-template-columns:minmax(0,1.6fr) minmax(230px,1fr);gap:10px}
+      .diagram-card{padding:10px 12px 8px}
+      .card-heading{margin-bottom:2px}
+      .card-heading h2{font-size:13px}
+      .diagram-caption{font-size:10px;line-height:1.3;margin:2px 0 0}
+      .metrics{grid-column:2;grid-row:1;grid-template-columns:1fr}
+      .metric{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;align-items:center;padding:7px 12px}
+      .metric-label{font-size:10px;flex-wrap:wrap;gap:4px}
+      .metric-value{grid-column:2;grid-row:1 / span 2;font-size:24px;margin:0}
+      .metric-value span{font-size:11px}
+      .metric-note{grid-column:1;grid-row:2;font-size:10px}
+      .plots{grid-column:1/-1;grid-template-columns:1fr 1fr;gap:10px}
+      .plots .plot-card{padding:10px}
+      .plot-card h2{font-size:13px}
+      .plot-subtitle,.plot-note{display:none}
+      .plot-subtitle.reference-context{display:block;min-height:0;font-size:10px;margin:1px 0 0}
+      .plot{max-height:clamp(200px,calc(100dvh - 420px),300px)}
+      .plot text{font-size:14px}
+      .legend{margin:3px 0 0 5px;gap:3px 10px}
+      
+      
+      
+      
+      .notes{margin-top:12px;padding-top:9px}
+      .footer{padding-top:8px}
+    }
+    @media(max-width:760px){.shell{padding:20px 16px}.masthead{align-items:flex-start;flex-direction:column;gap:15px}.model-picker{gap:7px}.model-button{min-width:0;flex:1;padding:11px;gap:8px}.model-button strong{font-size:12px}.model-button span{font-size:10px}.model-icon{width:27px;height:27px}.workspace{grid-template-columns:1fr}.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}.control:last-child{grid-column:1/-1}.controls h2{margin-bottom:14px}.boundary{margin-bottom:16px}.metrics{gap:1px}.metric{padding:11px 9px}.metric-label{font-size:10px;flex-wrap:wrap;gap:3px}.metric-value{font-size:22px}.metric-value span{font-size:10px}.diagram-card{padding:14px 13px 9px}.notes-body{grid-template-columns:1fr;gap:16px}.card-heading{align-items:flex-start}.footer{flex-direction:column;gap:4px}}
+    @media(max-width:520px){.control-grid{grid-template-columns:minmax(0,1fr)}.controls{min-width:0}.metric-value{font-size:20px}.card-heading .small{max-width:90px;text-align:right}}
+    @media print{body{background:#fff}.shell{padding:0}.reset,.footer{display:none}.workspace{grid-template-columns:230px 1fr}.plots{grid-template-columns:1fr 1fr}.card,.metrics,.notes-body{display:grid}.control input[type="range"]{display:none}.notes summary{display:none}.notes-body{display:block}.notes-body>div{margin-bottom:10px}}
+  </style>
+</head>
+<body>
+  <noscript><p>This interactive lab needs JavaScript enabled in your browser. No software installation is needed.</p></noscript>
+  <div class="shell">
+    <header class="masthead">
+      <div><p class="eyebrow">Darcy lab / porous media</p><h1>Faults &amp; fluid flow</h1><p class="subtitle">Explore how permeability changes the path of water through rock.</p></div>
+    </header>
+    <nav class="model-picker" aria-label="Flow geometry">
+      <button class="model-button" id="serial-button" type="button" aria-pressed="true" aria-controls="experiment">
+        <svg class="model-icon" viewBox="0 0 36 36" aria-hidden="true"><rect x="2" y="7" width="32" height="23" rx="2" fill="#d8b888"/><path d="M17 7h3v23h-3z" fill="#4b6167"/><path d="M5 18h24m-4-4 4 4-4 4" stroke="currentColor" fill="none" stroke-width="1.7"/></svg>
+        <div><strong>Across the fault</strong><span>Rock → fault → rock · series</span></div>
+      </button>
+      <button class="model-button" id="parallel-button" type="button" aria-pressed="false" aria-controls="experiment">
+        <svg class="model-icon" viewBox="0 0 36 36" aria-hidden="true"><rect x="2" y="7" width="32" height="23" rx="2" fill="#d8b888"/><path d="M2 17h32v4H2z" fill="#4b6167"/><path d="M5 12h24m-4-3 4 3-4 3M5 26h24m-4-3 4 3-4 3" stroke="currentColor" fill="none" stroke-width="1.5"/></svg>
+        <div><strong>Along the fault</strong><span>Three side-by-side paths · parallel</span></div>
+      </button>
+    </nav>
+    <main class="workspace" id="experiment">
+      <aside class="card controls" aria-label="Experiment controls">
+        <p class="panel-kicker">Change the inputs</p><h2>Your experiment</h2>
+        <fieldset class="boundary"><legend>Hold constant</legend><div class="boundary-options">
+          <label><input type="radio" name="boundary" value="pressure" checked><span>Pressure drop</span></label>
+          <label><input type="radio" name="boundary" value="mass"><span>Mass flow</span></label>
+        </div></fieldset>
+        <div class="control-grid" id="controls"></div>
+        <button class="button reset" id="reset" type="button">↺ Reset inputs</button>
+      </aside>
+      <section class="results" aria-label="Simulation results">
+        <div class="card diagram-card"><div class="card-heading"><h2 id="geometry-title">Flow across the fault</h2><span class="small">Flow area: 40,000 m²</span></div><svg id="diagram" viewBox="0 0 900 172" role="img" aria-labelledby="diagram-title diagram-desc"></svg><p id="geometry-caption" class="diagram-caption"></p></div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Total mass flow <span class="fixed-tag" id="mass-fixed" hidden>Fixed</span></div><p class="metric-value" id="mass-result"></p><p class="metric-note">Through the whole system</p></div>
+          <div class="metric"><div class="metric-label">Pressure drop <span class="fixed-tag" id="pressure-fixed">Fixed</span></div><p class="metric-value" id="pressure-result"></p><p class="metric-note">Inlet relative to outlet</p></div>
+          <div class="metric"><div class="metric-label" id="share-label">Fault pressure share</div><p class="metric-value" id="share-result"></p><p class="metric-note" id="share-note"></p></div>
+        </div>
+        <p class="sr-only" id="result-summary" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div class="plots">
+          <section class="card plot-card"><div class="plot-heading"><h2>Pressure distribution</h2><label class="axis-setting" for="pressure-scale">Scale<select id="pressure-scale" aria-label="Pressure axis scale" title="Auto follows the current pressure. Fixed range keeps the vertical scale steady while pressure or mass flow changes."><option value="auto">Auto</option><option value="fixed">Fixed range</option></select></label></div><p class="plot-subtitle" id="pressure-subtitle"></p><svg class="plot" id="pressure-plot" viewBox="0 0 560 330" role="img" aria-labelledby="pressure-title pressure-desc"></svg><div class="legend"><span><i class="key"></i>Pressure</span><span id="boundary-legend"><i class="key" style="border-color:#b2bdb8;border-top-style:dotted"></i>Rock / fault boundary</span></div><p class="plot-note" id="pressure-scale-note"></p></section>
+          <section class="card plot-card"><div class="plot-heading"><h2 id="sensitivity-heading">Flow vs fault permeability</h2><label class="axis-setting" for="sensitivity-scale">Scale<select id="sensitivity-scale" aria-label="Permeability plot axis scale" title="Auto fits the current curves. Fixed range keeps the vertical scale steady across the full pressure or mass flow input range."><option value="auto">Auto</option><option value="fixed">Fixed range</option></select></label></div><p class="plot-subtitle" id="sensitivity-subtitle"></p><svg class="plot" id="sensitivity-plot" viewBox="0 0 560 330" role="img" aria-labelledby="sensitivity-title sensitivity-desc"></svg><div class="legend" id="sensitivity-legend"></div><p class="plot-note" id="sensitivity-note"></p></section>
+        </div>
+      </section>
+    </main>
+    <details class="notes"><summary>Behind the model · equations, units &amp; assumptions</summary><div class="notes-body">
+      <div><h3>Single Phase Darcy's Law</h3><p class="equation">Q = kA ΔP / (μL) &nbsp; · &nbsp; ṁ = ρQ</p><p>Across the fault: the same flow passes through all three units. Resistances Rᵢ = μLᵢ / (kᵢA) add, so Q = ΔP / ΣRᵢ. Pressure drops in proportion to each resistance.</p><p>Along the fault: each path has the same pressure drop. Conductances Cᵢ = kᵢAᵢ / (μL) add, so Q = ΔP ΣCᵢ. Flow divides in proportion to each conductance.</p><p>At fixed pressure, the along-fault comparison shows total mass flow versus fault permeability; rock and fault flow contributions add to the total. At fixed mass flow, it shows the pressure required through combined paths, the two rock paths alone, or the fault alone, retaining each path's area. These reference pressures do not add.</p></div>
+      <div><h3>Constants &amp; scope</h3><p>Water density ρ = 1,000 kg/m³; dynamic viscosity μ = 5.5 × 10⁻⁴ Pa·s. 1 mD = 9.869233 × 10⁻¹⁶ m²; 1 bar = 100,000 Pa. Permeability sliders use a logarithmic scale; the number fields show mD directly.</p><p>Steady, one-dimensional, saturated, single-phase Darcy flow with constant fluid properties and uniform permeability within each unit. Both rock units share one permeability. Across the fault, both rock lengths are equal and A = 200 × 200 m². Along it, total cross-section is 200 m wide × 200 m high; fault thickness changes the partition of that fixed area.</p><p>These idealised models isolate permeability and geometry. They do not include gravity, storage, transient flow, or fracture opening. Diagram proportions are adjusted when a layer is too thin to see.</p></div>
+    </div></details>
+    <footer class="footer"><span>Teaching lab · based on the supplied serial and parallel Darcy models</span><span>Calculations stay in your browser · no external libraries or services</span></footer>
+  </div>
+  <script id="darcy-app">
+  (() => {
+    'use strict';
+    const MD = 9.869233e-16, MU = 5.5e-4, RHO = 1000, AREA = 40000;
+    const DEFAULTS = Object.freeze({geometry:'serial', boundary:'pressure', rockK:1, faultK:1, serialLength:100, serialWidth:10, parallelLength:200, parallelHeight:10, pressure:10, mass:1});
+    const MODEL_DEFAULTS=Object.freeze({serial:DEFAULTS,parallel:Object.freeze({...DEFAULTS,geometry:'parallel',boundary:'mass'})});
+    const PARAMETERS = {
+      rockK:{label:'Rock permeability',unit:'mD',min:0.001,max:1000,log:true},
+      faultK:{label:'Fault permeability',unit:'mD',min:0.001,max:1000,log:true},
+      serialLength:{label:'Each rock length',unit:'m',min:10,max:500,step:1},
+      serialWidth:{label:'Fault width',unit:'m',min:0.1,max:50,step:0.1},
+      parallelLength:{label:'Flow length',unit:'m',min:10,max:500,step:1},
+      parallelHeight:{label:'Fault thickness',unit:'m',min:1,max:199,step:1},
+      pressure:{label:'Pressure drop',unit:'bar',min:1,max:100,step:0.1},
+      mass:{label:'Mass flow',unit:'kg/s',min:0.01,max:20,step:0.01}
+    };
+
+    // All calculations use SI units. The UI alone converts mD and bar.
+    function solve(s) {
+      const kr=s.rockK*MD, kf=s.faultK*MD;
+      let resistance, conductance, edges, areas;
+      if(s.geometry==='serial') {
+        resistance=[MU*s.serialLength/(kr*AREA),MU*s.serialWidth/(kf*AREA),MU*s.serialLength/(kr*AREA)];
+        conductance=1/resistance.reduce((a,b)=>a+b,0);
+        edges=[0,s.serialLength,s.serialLength+s.serialWidth,2*s.serialLength+s.serialWidth];
+        areas=[AREA,AREA,AREA];
+      } else {
+        const rockArea=(AREA-200*s.parallelHeight)/2;
+        areas=[rockArea,200*s.parallelHeight,AREA-rockArea-200*s.parallelHeight];
+        conductance=(kr*areas[0]+kf*areas[1]+kr*areas[2])/(MU*s.parallelLength);
+        edges=[0,s.parallelLength];
+      }
+      const dp=s.boundary==='pressure'?s.pressure*1e5:(s.mass/RHO)/conductance;
+      const volume=dp*conductance, mass=s.boundary==='mass'?s.mass:RHO*volume;
+      let pressures, faultShare, pathMass;
+      if(s.geometry==='serial') {
+        // Sum downstream drops to avoid subtractive cancellation at the outlet.
+        pressures=[dp,volume*(resistance[1]+resistance[2]),volume*resistance[2],0];
+        faultShare=resistance[1]/resistance.reduce((a,b)=>a+b,0);
+        pathMass=[mass,mass,mass];
+      } else {
+        pressures=[dp,0];
+        pathMass=[kr,kf,kr].map((k,i)=>RHO*dp*k*areas[i]/(MU*s.parallelLength));
+        faultShare=pathMass[1]/mass;
+      }
+      return {mass,dp,pressures,edges,areas,resistance,conductance,faultShare,pathMass};
+    }
+
+    function sensitivity(s,count=121) {
+      const points=[],rock=[],fault=[];
+      const referenceMass=s.geometry==='parallel'&&s.boundary==='mass'?s.mass:null;
+      for(let i=0;i<count;i++) {
+        const k=10**(-3+6*i/(count-1));
+        const result=solve({...s,faultK:k});
+        points.push([k,s.boundary==='pressure'?result.mass:result.dp/1e5]);
+        if(s.geometry==='serial') {
+          const rr=result.resistance[0]+result.resistance[2], rf=result.resistance[1];
+          rock.push([k,s.boundary==='pressure'?RHO*result.dp/rr:(s.mass/RHO)*rr/1e5]);
+          fault.push([k,s.boundary==='pressure'?RHO*result.dp/rf:(s.mass/RHO)*rf/1e5]);
+        } else if(s.boundary==='pressure') {
+          rock.push([k,result.pathMass[0]+result.pathMass[2]]);
+          fault.push([k,result.pathMass[1]]);
+        } else {
+          const matrixConductance=s.rockK*MD*(result.areas[0]+result.areas[2])/(MU*s.parallelLength);
+          const faultConductance=k*MD*result.areas[1]/(MU*s.parallelLength);
+          rock.push([k,(referenceMass/RHO)/matrixConductance/1e5]);
+          fault.push([k,(referenceMass/RHO)/faultConductance/1e5]);
+        }
+      }
+      return {points,rock,fault,referenceMass};
+    }
+    function sensitivityLimits(s,fixed=false,current=sensitivity(s)) {
+      const input=s.boundary==='pressure'?'pressure':'mass';
+      // A unit-input sweep gives stable bounds across the full input range.
+      const curves=fixed?sensitivity({...s,[input]:1}):current;
+      const values=[...curves.points,...curves.rock,...curves.fault].map(p=>p[1]);
+      const minimum=Math.min(...values)*(fixed?PARAMETERS[input].min:1);
+      const maximum=Math.max(...values)*(fixed?PARAMETERS[input].max:1);
+      const lo=Math.floor(Math.log10(minimum)),hi=Math.ceil(Math.log10(maximum));
+      return {lo,hi:Math.max(lo+1,hi)};
+    }
+    globalThis.Darcy=Object.freeze({solve,sensitivity,sensitivityLimits,DEFAULTS,MODEL_DEFAULTS,MD,MU,RHO,AREA});
+    if(typeof document==='undefined') return;
+
+    const $=id=>document.getElementById(id);
+    const modelStates={serial:{...MODEL_DEFAULTS.serial},parallel:{...MODEL_DEFAULTS.parallel}};
+    let state=modelStates.serial;
+    const fmt=(value,digits=3)=>{
+      if(value===0)return '0';
+      if(Math.abs(value)<0.001||Math.abs(value)>=1e5)return value.toExponential(digits-1).replace('e+','e');
+      return Number(value.toPrecision(digits)).toLocaleString('en',{maximumFractionDigits:8});
+    };
+    const exact=value=>Number(value.toPrecision(10)).toString();
+    const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    function controlKeys(){return ['rockK','faultK',...(state.geometry==='serial'?['serialLength','serialWidth']:['parallelLength','parallelHeight']),state.boundary==='pressure'?'pressure':'mass'];}
+    function buildControls() {
+      $('controls').innerHTML=controlKeys().map(key=>{
+        const p=PARAMETERS[key];
+        return `<div class="control"><div class="control-top"><label for="${key}-value">${p.label}</label><div class="number-wrap"><input id="${key}-value" type="number" min="${p.min}" max="${p.max}" step="any" value="${exact(state[key])}" aria-label="${p.label} in ${p.unit}" inputmode="decimal"><span class="unit">${p.unit}</span></div></div><input id="${key}-range" type="range" min="${p.log?-3:p.min}" max="${p.log?3:p.max}" step="${p.log?0.01:p.step}" value="${p.log?Math.log10(state[key]):state[key]}" aria-label="${p.label}${p.log?', logarithmic scale':''}" aria-valuetext="${exact(state[key])} ${p.unit}"><div class="range-labels"><span>${p.min} ${p.unit}</span><span>${p.max.toLocaleString('en')} ${p.unit}</span></div>${p.log?'<p class="control-help">Log scale · each decade is a factor of 10</p>':''}</div>`;
+      }).join('');
+      for(const key of controlKeys()) {
+        const p=PARAMETERS[key],range=$(key+'-range'),number=$(key+'-value');
+        range.addEventListener('input',()=>{
+          state[key]=p.log?10**Number(range.value):Number(range.value);
+          number.value=exact(state[key]);number.setCustomValidity('');
+          range.setAttribute('aria-valuetext',`${fmt(state[key],5)} ${p.unit}`);scheduleRender();
+        });
+        number.addEventListener('input',()=>{
+          number.setCustomValidity('');
+          const value=number.valueAsNumber;
+          if(!Number.isFinite(value)||value<p.min||value>p.max)return;
+          state[key]=value;range.value=p.log?Math.log10(value):value;
+          range.setAttribute('aria-valuetext',`${fmt(value,5)} ${p.unit}`);scheduleRender();
+        });
+        number.addEventListener('change',()=>{
+          if(!number.validity.valid||number.value===''){
+            number.setCustomValidity(`Enter a value from ${p.min} to ${p.max} ${p.unit}.`);number.reportValidity();
+            number.value=exact(state[key]);number.setCustomValidity('');
+          }
+        });
+      }
+      document.querySelectorAll('input[name="boundary"]').forEach(input=>{input.checked=input.value===state.boundary;});
+      $('serial-button').setAttribute('aria-pressed',state.geometry==='serial');
+      $('parallel-button').setAttribute('aria-pressed',state.geometry==='parallel');
+    }
+
+    const svgText=(x,y,text,attrs='')=>`<text x="${x}" y="${y}" ${attrs}>${escape(text)}</text>`;
+    const line=(x1,y1,x2,y2,attrs='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" ${attrs}/>`;
+    function drawDiagram(r) {
+      const serial=state.geometry==='serial', left=65,width=770,top=47,height=78;
+      let parts=`<title id="diagram-title">${serial?'Flow across rock, fault, and rock in series':'Flow through rock and fault paths in parallel'}</title><desc id="diagram-desc">${serial?'The same mass flow passes through each unit.':'The three paths have the same pressure drop; their flow rates add.'} Rock permeability ${fmt(state.rockK)} mD. Fault permeability ${fmt(state.faultK)} mD.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1L9 5 0 9" fill="none" stroke="#183c3b" stroke-width="1.6"/></marker></defs>`;
+      parts+=line(left,24,left+width,24,'stroke="#183c3b" stroke-width="1.5" marker-end="url(#arrow)"');
+      parts+=svgText(450,16,'Flow direction','text-anchor="middle" font-size="12" fill="#536867"');
+      if(serial) {
+        const total=r.edges[3],fw=Math.max(8,width*state.serialWidth/total),rw=(width-fw)/2;
+        parts+=`<rect x="${left}" y="${top}" width="${rw}" height="${height}" fill="#d8b888"/><rect x="${left+rw}" y="${top}" width="${fw}" height="${height}" fill="#4b6167"/><rect x="${left+rw+fw}" y="${top}" width="${rw}" height="${height}" fill="#d8b888"/><rect x="${left}" y="${top}" width="${width}" height="${height}" rx="2" fill="none" stroke="#8c9b92"/>`;
+        for(const x of [left+rw/2,left+rw+fw+rw/2])parts+=svgText(x,82,'Rock matrix','text-anchor="middle" font-size="15" fill="#493722"')+svgText(x,103,`${fmt(state.rockK)} mD · ${fmt(state.serialLength)} m`,'text-anchor="middle" font-size="12" fill="#493722"');
+        parts+=line(450,top+height,450,145,'stroke="#4b6167"')+svgText(450,162,`Fault · ${fmt(state.faultK)} mD · ${fmt(state.serialWidth)} m wide`,'text-anchor="middle" font-size="12" fill="#344e54"');
+      } else {
+        const fh=Math.max(5,Math.min(height-10,height*state.parallelHeight/200)),rh=(height-fh)/2;
+        parts+=`<rect x="${left}" y="${top}" width="${width}" height="${rh}" fill="#d8b888"/><rect x="${left}" y="${top+rh}" width="${width}" height="${fh}" fill="#4b6167"/><rect x="${left}" y="${top+rh+fh}" width="${width}" height="${rh}" fill="#d8b888"/><rect x="${left}" y="${top}" width="${width}" height="${height}" fill="none" stroke="#8c9b92"/>`;
+        const ys=[top+rh/2,top+rh+fh/2,top+rh+fh+rh/2];
+        ys.forEach((y,i)=>{
+          const halfHead=Math.min(4,(i===1?fh:rh)*0.32),end=left+110;
+          parts+=`<path d="M${left+16} ${y}H${end}M${end-halfHead*1.5} ${y-halfHead}L${end} ${y}L${end-halfHead*1.5} ${y+halfHead}" fill="none" stroke="${i===1?'#fff':'#183c3b'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+        });
+        [left+width/6,left+width/2,left+5*width/6].forEach((x,i)=>{
+          const name=i===1?'Fault':`Rock ${i===0?1:2}`,permeability=i===1?state.faultK:state.rockK;
+          parts+=svgText(x,145,`${name} · ${fmt(permeability)} mD · ${fmt(r.pathMass[i])} kg/s`,'text-anchor="middle" font-size="13" fill="#344e54"');
+          parts+=svgText(x,163,`Area: ${fmt(r.areas[i],4)} m²`,'text-anchor="middle" font-size="12" fill="#536867"');
+        });
+      }
+      parts+=svgText(13,91,'Inlet','font-size="12" fill="#536867"')+svgText(847,91,'Outlet','font-size="12" fill="#536867"');
+      $('diagram').innerHTML=parts;
+      $('geometry-title').textContent=serial?'Flow across the fault':'Flow along the fault';
+      $('geometry-caption').textContent=serial?`Same flow in every unit · total length ${fmt(r.edges[3],4)} m · fault width may be enlarged for visibility.`:`Length ${fmt(state.parallelLength)} m · cross-section 200 × 200 m · fault thickness ${fmt(state.parallelHeight)} m; thin layers may be enlarged.`;
+    }
+
+    const BOX={left:75,right:535,top:23,bottom:268};
+    function path(points,x,y){return points.map((p,i)=>`${i?'L':'M'}${x(p[0]).toFixed(3)},${y(p[1]).toFixed(3)}`).join(' ');}
+    function linearTicks(max){
+      // Continuous limits avoid the jumps caused by rounding to "nice" bounds.
+      return {upper:max*1.08,ticks:[0,1,2,3,4].map(i=>max*i/4)};
+    }
+    function axes(xTicks,yTicks,x,y,xLabel,yLabel,grid={}) {
+      let s='<g font-family="system-ui, sans-serif" font-size="12" fill="#536867">';
+      for(const v of grid.xMinor||[])s+=line(x(v),BOX.top,x(v),BOX.bottom,'stroke="#e6ebe5" stroke-width="0.65"');
+      for(const v of grid.yMinor||[])s+=line(BOX.left,y(v),BOX.right,y(v),'stroke="#e6ebe5" stroke-width="0.65"');
+      for(const v of grid.yMajor||yTicks)s+=line(BOX.left,y(v),BOX.right,y(v),`stroke="${grid.yMajor?'#cbd5cd':'#e3e8e3'}"`);
+      for(const v of xTicks)s+=line(x(v),BOX.top,x(v),BOX.bottom,`stroke="${grid.yMajor?'#cbd5cd':'#edf0eb'}"`);
+      for(const v of yTicks)s+=svgText(BOX.left-9,y(v)+4,fmt(v),'text-anchor="end"');
+      for(const v of xTicks)s+=svgText(x(v),BOX.bottom+22,fmt(v),'text-anchor="middle"');
+      s+=line(BOX.left,BOX.top,BOX.left,BOX.bottom,'stroke="#9eafa6"')+line(BOX.left,BOX.bottom,BOX.right,BOX.bottom,'stroke="#9eafa6"');
+      s+=svgText((BOX.left+BOX.right)/2,318,xLabel,'text-anchor="middle" font-size="13" fill="#183c3b"');
+      s+=`<text transform="translate(17 ${(BOX.top+BOX.bottom)/2}) rotate(-90)" text-anchor="middle" font-size="13" fill="#183c3b">${escape(yLabel)}</text></g>`;
+      return s;
+    }
+    function drawPressure(r) {
+      const serial=state.geometry==='serial',total=r.edges.at(-1),fixed=$('pressure-scale').value==='fixed';
+      const maxPressure=fixed?(state.boundary==='pressure'?PARAMETERS.pressure.max:solve({...state,mass:PARAMETERS.mass.max}).dp/1e5):r.dp/1e5;
+      const scale=linearTicks(maxPressure);
+      const scaleDescription=fixed?`The vertical scale covers the full ${state.boundary==='pressure'?'1–100 bar pressure':'0.01–20 kg/s mass-flow'} input range at the current geometry and permeabilities.`:'The vertical scale follows inlet pressure continuously.';
+      const x=v=>BOX.left+v/total*(BOX.right-BOX.left),y=v=>BOX.bottom-v/scale.upper*(BOX.bottom-BOX.top);
+      let s=`<title id="pressure-title">Pressure distribution</title><desc id="pressure-desc">Pressure decreases from ${fmt(r.dp/1e5)} bar at the inlet to zero at ${fmt(total)} metres.${serial?` The fault accounts for ${fmt(r.faultShare*100)} percent of the pressure drop.`:' All three paths have the same linear pressure profile.'} ${scaleDescription}</desc>`;
+      if(serial){s+=`<rect x="${BOX.left}" y="${BOX.top}" width="${BOX.right-BOX.left}" height="${BOX.bottom-BOX.top}" fill="#d8b888" opacity="0.13"/><rect x="${x(r.edges[1])}" y="${BOX.top}" width="${x(r.edges[2])-x(r.edges[1])}" height="${BOX.bottom-BOX.top}" fill="#4b6167" opacity="0.17"/>`;}
+      const xt=[0,total/4,total/2,3*total/4,total];
+      s+=axes(xt,scale.ticks,x,y,'Distance (m)','Pressure (bar)');
+      if(serial)for(const v of r.edges.slice(1,-1))s+=line(x(v),BOX.top,x(v),BOX.bottom,'stroke="#9ca9a4" stroke-dasharray="3 4"');
+      const points=r.edges.map((v,i)=>[v,r.pressures[i]/1e5]);
+      s+=`<path d="${path(points,x,y)}" stroke="#2365b0" stroke-width="3" fill="none"/>`;
+      points.forEach(p=>{s+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.5" fill="#2365b0"><title>${fmt(p[0])} m: ${fmt(p[1],5)} bar</title></circle>`;});
+      $('pressure-plot').innerHTML=s;
+      $('boundary-legend').hidden=!serial;
+      $('pressure-subtitle').textContent=serial?'Pressure falls most steeply where resistance is greatest.':'Every parallel path shares this pressure profile.';
+      $('pressure-scale-note').textContent=`Outlet pressure is the zero reference. ${scaleDescription}`;
+    }
+
+    function drawSensitivity(r) {
+      const serial=state.geometry==='serial',fixedPressure=state.boundary==='pressure',curves=sensitivity(state);
+      const fixedScale=$('sensitivity-scale').value==='fixed';
+      const {lo,hi}=sensitivityLimits(state,fixedScale,curves);
+      const x=v=>BOX.left+(Math.log10(v)+3)/6*(BOX.right-BOX.left), y=v=>BOX.bottom-(Math.log10(v)-lo)/(hi-lo)*(BOX.bottom-BOX.top);
+      const ticks=[];for(let e=lo;e<=hi;e+=Math.max(1,Math.ceil((hi-lo)/6)))ticks.push(10**e);if(ticks.at(-1)!==10**hi)ticks.push(10**hi);
+      const grid={xMinor:[],yMinor:[],yMajor:[]};
+      // Logarithmic subdivisions at 2–9 within each decade on both axes.
+      for(let e=-3;e<3;e++)for(let n=2;n<=9;n++)grid.xMinor.push(n*10**e);
+      for(let e=lo;e<=hi;e++){
+        grid.yMajor.push(10**e);
+        if(e<hi)for(let n=2;n<=9;n++)grid.yMinor.push(n*10**e);
+      }
+      const label=fixedPressure?'Mass flow (kg/s)':'Pressure drop (bar)',cur=fixedPressure?r.mass:r.dp/1e5;
+      const context=serial?'All other inputs are held at their current values.':fixedPressure?`Pressure drop is held fixed at ${fmt(state.pressure)} bar. Total mass flow is the sum of the rock and fault contributions.`:`The comparison holds total mass flow fixed at ${fmt(r.mass)} kg/s for combined paths, rock-only, and fault-only references.`;
+      const scaleDescription=fixedScale?'The vertical axis covers the full selected input range at the current geometry and rock permeability.':'The vertical axis fits the current curves.';
+      let s=`<title id="sensitivity-title">${fixedPressure?'Flow':'Pressure drop'} versus fault permeability</title><desc id="sensitivity-desc">Both axes are logarithmic. ${context} ${scaleDescription} Current fault permeability ${fmt(state.faultK)} mD gives ${fmt(cur)} ${fixedPressure?'kg/s':'bar'}. Use the fault permeability slider for keyboard control.</desc>`;
+      s+=axes([.001,.01,.1,1,10,100,1000],ticks,x,y,'Fault permeability (mD) · log scale',label+' · log scale',grid);
+      s+=line(x(state.rockK),BOX.top,x(state.rockK),BOX.bottom,'stroke="#896037" stroke-dasharray="5 5" opacity=".65"');
+      if(curves.rock.length)s+=`<path d="${path(curves.rock,x,y)}" stroke="#896037" stroke-width="2" stroke-dasharray="7 5" fill="none"/><path d="${path(curves.fault,x,y)}" stroke="#13776d" stroke-width="2" stroke-dasharray="2 5" fill="none"/>`;
+      s+=`<path d="${path(curves.points,x,y)}" stroke="#2365b0" stroke-width="3" fill="none"/>`;
+      s+=line(x(state.faultK),BOX.top,x(state.faultK),BOX.bottom,'stroke="#bc571d" stroke-dasharray="3 4" opacity=".65"');
+      s+=`<circle cx="${x(state.faultK)}" cy="${y(cur)}" r="6" fill="#bc571d" stroke="white" stroke-width="2"><title>Current: ${fmt(state.faultK,5)} mD, ${fmt(cur,5)} ${fixedPressure?'kg/s':'bar'}</title></circle>`;
+      const anchor=state.faultK>30?'end':'start',dx=anchor==='end'?-10:10;
+      s+=svgText(x(state.faultK)+dx,Math.max(BOX.top+13,y(cur)-12),`${fmt(cur)} ${fixedPressure?'kg/s':'bar'}`,`text-anchor="${anchor}" font-size="12" font-weight="650" fill="#9c4110" stroke="white" stroke-width="4" paint-order="stroke"`);
+      $('sensitivity-plot').innerHTML=s;
+      $('sensitivity-heading').textContent=fixedPressure?'Flow vs fault permeability':'Pressure drop vs fault permeability';
+      $('sensitivity-subtitle').textContent=serial?`${fixedPressure?'Pressure drop':'Total mass flow'} held fixed · click the plot to change fault K`:fixedPressure?`Pressure drop fixed at ${fmt(state.pressure)} bar · click to change fault K`:`Comparison at ${fmt(r.mass)} kg/s total flow · click to change fault K`;
+      $('sensitivity-subtitle').classList.toggle('reference-context',!serial);
+      let legend=`<span><i class="key"></i>${serial?'Total':fixedPressure?'Total flow':'Combined paths'}</span>`;
+      if(curves.rock.length)legend+=`<span><i class="key rock"></i>${serial?(fixedPressure?'Rock limit':'Rock contribution'):fixedPressure?'Rock contribution':'Rock only (reference)'}</span><span><i class="key fault"></i>${serial?(fixedPressure?'Fault limit':'Fault contribution'):fixedPressure?'Fault contribution':'Fault only (reference)'}</span>`;
+      legend+='<span><i class="key selected"></i>Current</span>';
+      $('sensitivity-legend').innerHTML=legend;
+      $('sensitivity-note').textContent=serial&&fixedPressure?'Limits show flow through the rocks alone or fault alone. Dashed vertical line: rock K.':serial?'Rock and fault pressure contributions add. Dashed vertical line: rock K.':fixedPressure?'Rock and fault mass-flow contributions add to total flow. Dashed vertical line: rock K.':'Reference pressures drive the same total flow through the rocks alone or fault alone, using their existing areas. Dashed vertical line: rock K.';
+    }
+
+    let announceTimer,renderFrame=null;
+    function scheduleRender() {
+      if(renderFrame!==null)return;
+      renderFrame=requestAnimationFrame(()=>{renderFrame=null;render();});
+    }
+    function render() {
+      const r=solve(state),serial=state.geometry==='serial',fixedPressure=state.boundary==='pressure';
+      $('mass-result').innerHTML=`${fmt(r.mass)}<span>kg/s</span>`;
+      $('pressure-result').innerHTML=`${fmt(r.dp/1e5)}<span>bar</span>`;
+      $('share-result').innerHTML=`${fmt(r.faultShare*100)}<span>%</span>`;
+      $('share-label').textContent=serial?'Fault pressure share':'Fault flow share';
+      $('share-note').textContent=serial?'Of the total pressure drop':'Of the total mass flow';
+      $('mass-fixed').hidden=fixedPressure;$('pressure-fixed').hidden=!fixedPressure;
+      drawDiagram(r);drawPressure(r);drawSensitivity(r);
+      clearTimeout(announceTimer);announceTimer=setTimeout(()=>{$('result-summary').textContent=`Total mass flow ${fmt(r.mass)} kilograms per second; pressure drop ${fmt(r.dp/1e5)} bar. Fault ${serial?'pressure':'flow'} share ${fmt(r.faultShare*100)} percent.`;},250);
+    }
+    for(const geometry of ['serial','parallel'])$(geometry+'-button').addEventListener('click',()=>{state=modelStates[geometry];buildControls();render();});
+    document.querySelectorAll('input[name="boundary"]').forEach(input=>input.addEventListener('change',()=>{state.boundary=input.value;buildControls();render();}));
+    $('reset').addEventListener('click',()=>{state=modelStates[state.geometry]={...MODEL_DEFAULTS[state.geometry]};buildControls();render();});
+    $('pressure-scale').addEventListener('change',()=>drawPressure(solve(state)));
+    $('sensitivity-scale').addEventListener('change',()=>drawSensitivity(solve(state)));
+    $('sensitivity-plot').addEventListener('click',event=>{
+      const svg=$('sensitivity-plot'),point=svg.createSVGPoint();point.x=event.clientX;point.y=event.clientY;
+      const local=point.matrixTransform(svg.getScreenCTM().inverse());
+      if(local.x<BOX.left||local.x>BOX.right||local.y<BOX.top||local.y>BOX.bottom)return;
+      state.faultK=10**(-3+6*(local.x-BOX.left)/(BOX.right-BOX.left));
+      const range=$('faultK-range');range.value=Math.log10(state.faultK);range.setAttribute('aria-valuetext',`${fmt(state.faultK,5)} mD`);
+      $('faultK-value').value=exact(state.faultK);scheduleRender();
+    });
+    buildControls();render();
+  })();
+  </script>
+</body>
+</html>
